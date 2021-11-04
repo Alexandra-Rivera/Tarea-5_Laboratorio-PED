@@ -11,7 +11,7 @@ struct datos{
 struct nodo{
     datos datos; 
     struct nodo *sig; 
-} *primero, *ultimo; 
+}; 
 
 class listacircsimple{
     private: 
