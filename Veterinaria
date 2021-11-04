@@ -1,0 +1,196 @@
+#include <iostream>
+using namespace std; 
+
+struct datos{
+    int id, peso, edad; 
+    char nombre_mascota[50]; 
+    char nombre_dueno[50]; 
+    char raza[50];  
+}; typedef datos info; 
+
+struct nodo{
+    datos datos; 
+    struct nodo *sig; 
+} *primero, *ultimo; 
+
+class listacircsimple{
+    private: 
+     nodo *pInicio;  
+    public: 
+     listacircsimple(void); 
+     //~listacircsimple(void); 
+     void insertarNodo(void); 
+     void insertaratras(void); 
+     void insInicio(datos ); 
+     void insFinal(datos);
+     void mostrarlistacirc(void);
+     void mostrarlistacircpre(info);
+     void mostrarprimeroalultimo(void); 
+     void eliminarlistacirc(nodo *);
+     void OrdenAscendente(info dato); 
+     void borrarnodo(); 
+     void menu(void); 
+};
+
+listacircsimple::listacircsimple(){
+    pInicio = NULL; 
+};
+
+listacircsimple::~listacircsimple(){
+    if(pInicio){
+        eliminarlistacirc(pInicio); 
+        pInicio = NULL; 
+    }
+};
+
+void listacircsimple::eliminarlistacirc(nodo *p){
+    if (p -> sig != pInicio)
+        eliminarlistacirc(p -> sig); 
+    delete p; 
+}
+
+int idP; 
+void listacircsimple::insertarNodo(){
+    info datos; 
+    
+    cout << endl; 
+    //int idP; 
+    idP++; 
+    datos.id = idP; 
+    cin.ignore(); 
+    cout << "Nombre de la mascota: "; cin.getline(datos.nombre_mascota,50);  
+    cout << "Nombre del dueno: "; cin.getline(datos.nombre_dueno, 50); 
+    cout << "Raza: "; cin.getline(datos.raza,50); 
+    cout << "Peso: "; cin >> datos.peso; 
+    cout << "Edad: "; cin >> datos.edad; 
+    cout << "Id: " << datos.id << endl; 
+
+    insInicio(datos); 
+    //OrdenAscendente(datos); 
+}
+
+void listacircsimple::insInicio(datos datos){
+    nodo *nuevo; 
+
+    nuevo = new nodo; 
+    nuevo -> datos = datos; 
+
+    if(!pInicio){
+        pInicio = nuevo; 
+        pInicio -> sig = pInicio; 
+    }else{
+        nuevo -> sig = pInicio; 
+        nodo *saltarin  = pInicio; 
+        while(saltarin -> sig != pInicio){
+            saltarin = saltarin -> sig; 
+        } 
+
+        saltarin -> sig = nuevo; 
+        pInicio = nuevo; 
+    }
+
+}
+
+void listacircsimple::insFinal(datos datos){
+    nodo *nuevo; 
+
+    nuevo = new nodo; 
+    nuevo -> datos = datos; 
+    if(!pInicio){
+        pInicio = nuevo; 
+        pInicio -> sig = pInicio; 
+    }else{
+        nuevo -> sig = pInicio; 
+        nodo *saltarin = pInicio; 
+        while(saltarin -> sig != pInicio)
+            saltarin = saltarin -> sig; 
+        saltarin -> sig = nuevo; 
+    }
+}
+
+void listacircsimple::mostrarlistacircpre(info guardado){
+
+    cout << endl; 
+    int idP;  
+    cout << "Id: " << guardado.id<<endl; 
+    cout << "Nombre de la mascota: "<< guardado.nombre_mascota << endl; 
+    cout << "Nombre del dueno: " << guardado.nombre_dueno << endl; 
+    cout << "Raza: " << guardado.raza << endl; 
+    cout << "Peso: " << guardado.peso << endl; 
+    cout << "Edad: " << guardado.edad << endl; 
+}
+
+void listacircsimple::mostrarlistacirc(){
+    nodo *saltarin;
+
+    cout << endl; 
+    if (pInicio){  
+        saltarin = pInicio; 
+        do{
+          mostrarlistacircpre(saltarin -> datos); 
+          saltarin = saltarin -> sig; 
+        } while (saltarin != pInicio);
+    }
+}
+
+void listacircsimple::borrarnodo(){
+    info dato; nodo *actual = new nodo; 
+
+    actual = pInicio; 
+    int d =0; 
+    bool encontrado = false; 
+    cout << "Digite el id del nodo a eliminar: "; cin >> d;
+    cin.ignore();
+    if(pInicio){
+        while(actual && actual -> datos.id != d)
+            actual = actual -> sig;
+            if(d){
+                encontrado = true; 
+                cout << "ID " << d << " ENCONTRADO" << endl;
+                // 
+            } else{
+                cout << "Datos no encontrados" << endl; 
+            }
+        } 
+    else {
+        cout << "La lista esta vacia" << endl;
+    }
+    menu(); 
+}
+
+int main(void){
+    cout << endl; 
+
+    cout << "VETERINARIA HUELLITAS DE CARINO" << endl; 
+    listacircsimple objetolistacirc;
+ 
+    objetolistacirc.menu(); 
+
+    cout << endl;
+    return 0; 
+}
+
+void listacircsimple::menu(){
+    
+    cout << endl; 
+    int seleccion;
+
+    cout << "Menu de opciones"<<endl; 
+    cout << "1. Agregar a otra mascota" << endl; 
+    cout << "2. Mostrar por orden de id" << endl; 
+    cout << "3. Borrar datos" << endl; 
+
+    cout << "Digite el numero de su seleccion: "; cin >> seleccion; 
+
+    
+    if(seleccion == 1){
+        insertarNodo(); 
+        menu();
+    } else if(seleccion == 2){
+        mostrarlistacirc(); 
+    } else if (seleccion == 3){
+        borrarnodo(); 
+    } else {
+        cout << "La opcion seleccionada no existe" << endl;
+    }
+}
